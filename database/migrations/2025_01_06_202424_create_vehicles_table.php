@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('type_id')->constrained('type_vehicles'); // Foreign key ke type_vehicles
             $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->enum('role', ['customer', 'admin'])->default('customer');
-            $table->boolean('customer_validate')->default(false);
-            $table->rememberToken();
+            $table->decimal('price', 10, 2);
+            $table->string('license_plate')->unique();
+            $table->enum('status', ['available', 'rented', 'maintenance'])->default('available');
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('vehicles');
     }
 };
