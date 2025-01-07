@@ -1,3 +1,9 @@
+    @php
+        $rental_duration = $rental_duration ?? 1;
+        $start_date = $start_date ?? date('Y-m-d');
+        $start_time = $start_time ?? date('H:i');
+    @endphp
+
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -46,7 +52,8 @@
                             </li>
                         </ul>
                     </div>
-                </div>    </div>
+                </div>
+            </div>
         </div>
         <div class="shadow-md mt-4 rounded-lg">
             <div class="bg-white p-4 flex justify-between items-center rounded-lg" style="border-radius: 15px;">
@@ -104,6 +111,11 @@
         </div>
     </header>
     <main class="p-8">
+        @if (session('status'))
+            <div class="bg-green-500 text-white p-4 rounded mb-4">
+                {{ session('status') }}
+            </div>
+        @endif
         <div class="flex space-x-8">
             <aside class="bg-white p-4 rounded shadow-md w-1/4">
                 <div class="flex justify-between items-center mb-4">
@@ -231,37 +243,46 @@
                         </div>
                         <div id="paymentForm-{{ $vehicle->id }}" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
                             <div class="bg-white shadow-lg rounded-lg p-8 w-3/4 max-w-4xl">
-                                <div class="flex justify-between item   s-center mb-4">
+                                <div class="flex justify-between items-center mb-4">
                                     <h2 class="text-2xl font-bold text-orange-500 border-b-4 border-[#ea580c] pb-4">Payment Form</h2>
                                     <button onclick="togglePaymentForm({{ $vehicle->id }}, 'close')" class="text-gray-500 hover:text-gray-700">
                                         <i class="fas fa-times"></i>
                                     </button>
                                 </div>
-                                                                        <form action="{{ route('payment') }}" method="POST">
-                                                                            @csrf
-                                                                            <div class="flex space-x-4">
-                                                                                <div class="flex-1">
-                                                                                    <label class="block text-gray-700 font-bold">Payment Method</label>
-                                                                                    <p class="font-bold">Cash on Delivery</p>
-                                                                                    <input type="hidden" name="payment_method" value="cash">
-                                                                                </div>
-                                                                                <div class="flex-1">
-                                                                                    <label class="block text-gray-700 font-bold">Amount</label>
-                                                                                    <p class="font-bold">Rp {{ number_format($rental_duration * $vehicle->price, 0, ',', '.') }}</p>
-                                                                                </div>
-                                                                                <div class="flex-1">
-                                                                                    <label class="block text-gray-700 font-bold">Pickup Date</label>
-                                                                                    <p class="font-bold">{{ $start_time }}</p>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="flex space-x-4 mt-4">
-                                                                                <div class="flex-1 flex items-end">
-                                                                                    <button class="w-full bg-orange-500 text-white rounded px-4 py-2" type="submit">Pay Now</button>
-                                                                                </div>
-                                                                            </div>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>    <script>
+                                <form action="{{ route('payment') }}" method="POST">
+                                    @csrf
+                                    <div class="flex space-x-4">
+                                        <div class="flex-1">
+                                            <label class="block text-gray-700 font-bold">Payment Method</label>
+                                            <p class="font-bold">Cash on Delivery</p>
+                                            <input type="hidden" name="paymentMethod" value="cash">
+                                        </div>
+                                        <div class="flex-1">
+                                            <label class="block text-gray-700 font-bold">Amount</label>
+                                            <p class="font-bold">Rp {{ number_format($rental_duration * $vehicle->price, 0, ',', '.') }}</p>
+                                            <input type="hidden" name="amount" value="{{ $rental_duration * $vehicle->price }}">
+                                        </div>
+                                        <div class="flex-1">
+                                            <label class="block text-gray-700 font-bold">Pickup Date</label>
+                                            <p class="font-bold">{{ $start_date }}</p>
+                                            <input type="hidden" name="pickup_date" value="{{ $start_date }}">
+                                        </div>
+                                        <div class="flex-1">
+                                            <label class="block text-gray-700 font-bold">Pickup Time</label>
+                                            <p class="font-bold">{{ $start_time }}</p>
+                                            <input type="hidden" name="pickup_time" value="{{ $start_time }}">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="vehicle_id" value="{{ $vehicle->id }}">
+                                    <input type="hidden" name="rental_duration" value="{{ $rental_duration }}">
+                                    <div class="flex space-x-4 mt-4">
+                                        <div class="flex-1 flex items-end">
+                                            <button class="w-full bg-orange-500 text-white rounded px-4 py-2" type="submit">Pay Now</button>
+                                        </div>
+                                    </div>
+                                </form>    </div>
+                        </div>
+                        <script>
                         function togglePaymentForm(vehicleId, action) {
                             const form = document.getElementById(`paymentForm-${vehicleId}`);
                             if (action === 'close') {
@@ -272,8 +293,8 @@
                         }
                         </script>
                     </div>
-                    </div>
-                    @endforeach
+                </div>
+                @endforeach
             </section>
         </div>
     </main>

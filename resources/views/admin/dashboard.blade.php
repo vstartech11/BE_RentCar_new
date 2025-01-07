@@ -44,7 +44,7 @@
             <span class="text-orange-500">fleet</span>
             </h1>
         </div>
-        <div class="absolute top-64 left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-8 w-3/4 max-w-4xl text-center">
+        <div class="absolute top-56 left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-8 w-3/4 max-w-4xl text-center">
             <h2 class="text-2xl font-bold text-orange-500 mb-4 border-b-4 border-[#ea580c] pb-4">
             Edit Type Vehicles
             </h2>
@@ -52,7 +52,7 @@
             Edit Type Vehicles
             </a>
         </div>
-        <div class="absolute top-[28rem] left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-8 w-3/4 max-w-4xl text-center">
+        <div class="absolute top-[26rem] left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-8 w-3/4 max-w-4xl text-center">
             <h2 class="text-2xl font-bold text-orange-500 mb-4 border-b-4 border-[#ea580c] pb-4">
             Edit Vehicle
             </h2>
@@ -60,7 +60,15 @@
             Edit Vehicle
             </a>
         </div>
-        <div class="absolute top-[40rem] left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-8 w-3/4 max-w-4xl text-center">
+        <div class="absolute top-[38rem] left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-8 w-3/4 max-w-4xl text-center">
+            <h2 class="text-2xl font-bold text-orange-500 mb-4 border-b-4 border-[#ea580c] pb-4">
+            Edit Payment
+            </h2>
+            <a href="{{ route('admin.payment') }}" class="inline-block bg-orange-500 text-white rounded px-4 py-2 hover:bg-orange-600">
+            Edit Payment
+            </a>
+        </div>
+        <div class="absolute top-[50rem] left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-8 w-3/4 max-w-4xl text-center">
             <h2 class="text-2xl font-bold text-orange-500 mb-4 border-b-4 border-[#ea580c] pb-4">
             Manage Account
             </h2>

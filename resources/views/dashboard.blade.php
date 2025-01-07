@@ -94,7 +94,17 @@
                     <td class="py-2 px-4 border-b">{{ $transaction->vehicleName }}</td>
                     <td class="py-2 px-4 border-b">{{ $transaction->reservationDate }}</td>
                     <td class="py-2 px-4 border-b">{{ $transaction->paymentDate }}</td>
-                    <td class="py-2 px-4 border-b">{{ $transaction->status }}</td>
+                    <td class="py-2 px-4 border-b">
+                        @if ($transaction->status == 'pending')
+                            <span class="text-gray-500">{{ $transaction->status }}</span>
+                        @elseif ($transaction->status == 'confirmed')
+                            <span class="text-green-500">{{ $transaction->status }}</span>
+                        @elseif ($transaction->status == 'completed')
+                            <span class="text-blue-500">{{ $transaction->status }}</span>
+                        @elseif ($transaction->status == 'cancelled')
+                            <span class="text-red-500">{{ $transaction->status }}</span>
+                        @endif
+                    </td>
                     </tr>
                 @endforeach
                 </tbody>

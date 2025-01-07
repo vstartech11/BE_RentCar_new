@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users'); // Foreign key ke users
             $table->foreignId('vehicle_id')->constrained('vehicles'); // Foreign key ke vehicles
-            $table->date('reservation_date');
+            $table->date('reservation_date')->default(now());
             $table->date('pickup_date');
             $table->date('return_date');
             $table->enum('status', ['pending', 'confirmed', 'completed', 'cancelled'])->default('pending');

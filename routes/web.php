@@ -2,11 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VehicleController;
 use App\Models\TypeVehicle;
 use App\Models\Vehicle;
 use App\Models\User;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,6 +28,12 @@ Route::get('register', [AuthController::class, 'showRegisterForm'])->middleware(
 Route::post('register', [AuthController::class, 'register']);
 //search
 Route::post('search', [VehicleController::class, 'searchVehicle'])->middleware('auth')->name('search');
+//show search
+Route::get('search', function () {
+    $vehicles = Vehicle::all();
+    $typeVehicles = TypeVehicle::all();
+    return view('search', compact('vehicles', 'typeVehicles'));
+})->middleware('auth')->name('search');
 
 //edit vehicle is show admin.vehicle
 Route::get('admin/vehicle', function () {
@@ -43,6 +51,28 @@ Route::get('admin/account', function () {
     $accounts = User::all();
     return view('admin.account', compact('accounts'));
 })->middleware('auth')->name('admin.account');
+//edit payment is show admin.payment
+Route::get('admin/payment', function () {
+    $payments = DB::table('payments')
+        ->join('reservations', 'payments.reservation_id', '=', 'reservations.id')
+        ->join('vehicles', 'reservations.vehicle_id', '=', 'vehicles.id')
+        ->join('users as admins', 'payments.admin_id', '=', 'admins.id')
+        ->join('users as customers', 'reservations.user_id', '=', 'customers.id')
+        ->select(
+            'payments.id as id',
+            'payments.payment_date as paymentDate',
+            'payments.amount as amount',
+            'payments.payment_method as paymentMethod',
+            'reservations.pickup_date as pickupDate',
+            'reservations.return_date as returnDate',
+            'vehicles.name as vehicleName',
+            'admins.name as adminName',
+            'customers.name as customerName'
+        )
+        ->orderBy('paymentDate', 'asc')
+        ->get();
+    return view('admin.payment', compact('payments'));
+})->middleware('auth')->name('admin.payment');
 
 
 //when / is accessed, it will redirect to /login
@@ -67,6 +97,8 @@ Route::post('admin/add_account', [AuthController::class, 'addAccount'])->middlew
 Route::put('admin/edit_account/{id}', [AuthController::class, 'editAccount'])->middleware('auth')->name('edit_account');
 //delete account delete
 Route::delete('admin/delete_account/{id}', [AuthController::class, 'deleteAccount'])->middleware('auth')->name('delete_account');
+//edit payment put
+Route::put('admin/edit_payment/{id}', [PaymentController::class, 'editPayment'])->middleware('auth')->name('edit_payment');
 
 
 //admin dashboard
@@ -87,6 +119,7 @@ Route::get('dashboard', function () {
             'payments.payment_date as paymentDate',
             'reservations.status as status'
         )
+        ->orderBy('date', 'asc')
         ->get();
     return view('dashboard', compact('transactions'));
 })->middleware('auth')->name('dashboard');
@@ -94,4 +127,4 @@ Route::get('dashboard', function () {
 
 
 //payment customer post
-Route::post('payment', [VehicleController::class, 'payment'])->middleware('auth')->name('payment');
+Route::post('payment', [PaymentController::class, 'makePayment'])->middleware('auth')->name('payment');
