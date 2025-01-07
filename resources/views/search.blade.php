@@ -112,11 +112,15 @@
     </header>
     <main class="p-8">
         @if (session('status'))
-            <div class="bg-green-500 text-white p-4 rounded mb-4">
+            <div id="status-message" class="bg-green-500 text-white p-4 rounded mb-4">
                 {{ session('status') }}
             </div>
-        @endif
-        <div class="flex space-x-8">
+            <script>
+                setTimeout(function() {
+                    document.getElementById('status-message').style.display = 'none';
+                }, 5000); // Hide after 5 seconds
+            </script>
+        @endif    <div class="flex space-x-8">
             <aside class="bg-white p-4 rounded shadow-md w-1/4">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-bold">Filter</h3>

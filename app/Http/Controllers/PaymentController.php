@@ -54,6 +54,8 @@ class PaymentController extends Controller
             'payment_date' => $request->pickup_date,
             'admin_id' => $adminId->id,
         ]);
+        //return to previous page
+        return redirect()->back()->with('status', 'Payment made successfully');
 
     }
 
@@ -84,12 +86,21 @@ class PaymentController extends Controller
             'status' => $request->reservation_status,
         ]);
 
+
+    if ($request->reservation_status == 'confirmed') {
         //update vehicle table
         $vehicle = Vehicle::where('id', $request->vehicle_id)->update([
             'status' => 'rented',
         ]);
+    } elseif ($request->reservation_status == 'completed') {
+        //update vehicle table
+        $vehicle = Vehicle::where('id', $request->vehicle_id)->update([
+            'status' => 'available',
+        ]);
+
     }
+        //return to previous page
+        return redirect()->back()->with('status', 'Payment updated successfully');
 
-
-
+    }
 }
