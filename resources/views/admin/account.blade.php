@@ -41,55 +41,51 @@
 
         <div class="absolute top-20 left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-8 w-11/12 max-w-6xl mt-20 overflow-y-auto" style="max-height: 80vh;">
             <div class="flex justify-end">
-            <button class="bg-orange-500 text-white px-4 py-2 rounded" onclick="toggleForm('add')">Add New Vehicle</button>
+            <button class="bg-orange-500 text-white px-4 py-2 rounded" onclick="toggleForm('add')">Add New Account</button>
             </div>
             <h2 class="text-2xl font-bold text-orange-500 mb-4 border-b-4 border-[#ea580c] pb-4">
-            List Car
+            List Accounts
             </h2>
 
             <div class="overflow-x-auto">
-            @if($vehicles->isEmpty())
-            <p class="text-center text-gray-500">No vehicles available.</p>
+            @if($accounts->isEmpty())
+            <p class="text-center text-gray-500">No accounts available.</p>
             @else
-            <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+            <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden mx-auto">
             <thead class="bg-orange-500 text-white">
             <tr>
-            <th class="py-4 px-6 text-left">Car Name</th>
-            <th class="py-4 px-6 text-left">Car License</th>
-            <th class="py-4 px-6 text-left">Car Image</th>
-            <th class="py-4 px-6 text-left">Rental Price</th>
-            <th class="py-4 px-6 text-left">Status</th>
+            <th class="py-4 px-6 text-left">Name</th>
+            <th class="py-4 px-6 text-left">Email</th>
+            <th class="py-4 px-6 text-left">Role</th>
+            <th class="py-4 px-6 text-left">Customer Validate</th>
             <th class="py-4 px-6 text-left">Actions</th>
             </tr>
             </thead>
             <tbody>
-            @foreach($vehicles as $vehicle)
+            @foreach($accounts as $account)
+            @if($account->id !== Auth::user()->id)
             <tr class="border-b hover:bg-gray-100">
-            <td class="py-4 px-6">{{ $vehicle->name }}</td>
-            <td class="py-4 px-6">{{ $vehicle->license_plate }}</td>
+            <td class="py-4 px-6">{{ $account->name }}</td>
+            <td class="py-4 px-6">{{ $account->email }}</td>
+            <td class="py-4 px-6">{{ $account->role }}</td>
             <td class="py-4 px-6">
-            @foreach($typeVehicles as $typeVehicle)
-            @if($typeVehicle->id == $vehicle->type_id)
-            <img src="{{ asset('storage/img/cars/' . $typeVehicle->locationImg) }}" alt="{{ $vehicle->name }}" class="h-32 w-32 object-cover rounded" style="object-fit: contain;">
+            @if($account->role == 'customer')
+            <select disabled>
+            <option value="1" {{ $account->customer_validate ? 'selected' : '' }}>Yes</option>
+            <option value="0" {{ !$account->customer_validate ? 'selected' : '' }}>No</option>
+            </select>
             @endif
-            @endforeach
             </td>
-            <td class="py-4 px-6">Rp. {{ number_format($vehicle->price, 0, ',', '.') }}</td>
             <td class="py-4 px-6">
-                <span class="{{ $vehicle->status == 'available' ? 'text-green-500 font-bold' : ($vehicle->status == 'rented' ? 'text-gray-500 font-bold' : 'text-red-500 font-bold') }}">
-                    {{ $vehicle->status }}
-                </span>
-            </td>
-
-            <td class="py-4 px-6">
-            <a href="javascript:void(0)" onclick="toggleForm('edit', {{ $vehicle }})" class="text-blue-500 hover:underline">Edit</a>
-            <form action="{{ route('delete_vehicle', $vehicle->id) }}" method="POST" class="inline-block">
+            <a href="javascript:void(0)" onclick="toggleForm('edit', {{ $account }})" class="text-blue-500 hover:underline">Edit</a>
+            <form action="{{ route('delete_account', $account->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this account?');">
             @csrf
             @method('DELETE')
             <button type="submit" class="text-red-500 hover:underline ml-2">Delete</button>
             </form>
             </td>
             </tr>
+            @endif
             @endforeach
             </tbody>
             </table>
@@ -97,87 +93,102 @@
             </div>
         </div>
 
-        <div id="addVehicleForm" class="absolute top-64 left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-8 w-3/4 max-w-4xl hidden">
+        <div id="addAccountForm" class="absolute top-64 left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-8 w-3/4 max-w-4xl hidden">
             <div class="flex justify-between items-center mb-4">
             <h2 id="formTitle" class="text-2xl font-bold text-orange-500 border-b-4 border-[#ea580c] pb-4">
-            Add Car
+            Add Account
             </h2>
             <button onclick="toggleForm('close')" class="text-gray-500 hover:text-gray-700">
             <i class="fas fa-times"></i>
             </button>
             </div>
-            <form id="vehicleForm" action="{{ route('add_vehicle') }}" method="POST" enctype="multipart/form-data">
+            <form id="accountForm" action="{{ route('add_account') }}" method="POST">
             @csrf
             <input type="hidden" id="formMethod" name="_method" value="POST">
             <div class="flex space-x-4">
             <div class="flex-1">
-            <label class="block text-gray-700">Car Name</label>
-            <input id="carName" class="w-full border border-orange-500 rounded px-4 py-2" type="text" name="name" placeholder="Enter car name" required/>
+            <label class="block text-gray-700">Name</label>
+            <input id="accountName" class="w-full border border-orange-500 rounded px-4 py-2" type="text" name="name" placeholder="Enter name" required/>
             </div>
             <div class="flex-1">
-            <label class="block text-gray-700">Car License</label>
-            <input id="carLicense" class="w-full border border-orange-500 rounded px-4 py-2" type="text" name="license" placeholder="Enter car license" required/>
+            <label class="block text-gray-700">Email</label>
+            <input id="accountEmail" class="w-full border border-orange-500 rounded px-4 py-2" type="email" name="email" placeholder="Enter email" required/>
             </div>
             <div class="flex-1">
-            <label class="block text-gray-700">Car Type</label>
-            <select id="carType" class="w-full border border-orange-500 rounded px-4 py-2" name="type_id" required>
-                <option value="" disabled selected>Select car type</option>
-                @foreach($typeVehicles as $typeVehicle)
-                <option value="{{ $typeVehicle->id }}">
-                <div class="flex flex-col">
-                <span class="font-bold">{{ $typeVehicle->name }}, </span>
-                <span class="text-sm text-gray-500">{{ $typeVehicle->description }}</span>
-                </div>
-                </option>
-                @endforeach
+            <label class="block text-gray-700">Password</label>
+            <input id="accountPassword" class="w-full border border-orange-500 rounded px-4 py-2" type="password" name="password" placeholder="Enter password" required/>
+            </div>
+            <div class="flex-1">
+            <label class="block text-gray-700">Role</label>
+            <select id="accountRole" class="w-full border border-orange-500 rounded px-4 py-2" name="role" required onchange="toggleValidateSelect()">
+            <option value="" disabled selected>Select role</option>
+            <option value="admin">Admin</option>
+            <option value="customer">Customer</option>
             </select>
             </div>
             </div>
             <div class="flex space-x-4 mt-4">
-            <div class="flex-1">
-            <label class="block text-gray-700">Rental Price</label>
-            <input id="rentalPrice" class="w-full border border-orange-500 rounded px-4 py-2" type="number" name="price" placeholder="Enter rental price" required max="5000000"/>
+            <div class="flex-1" id="validateSelect" style="display: none;">
+            <label class="block text-gray-700">Customer Validate</label>
+            <select id="accountValidate" class="w-full border border-orange-500 rounded px-4 py-2" name="customer_validate">
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+            </select>
             </div>
             <div class="flex-1 flex items-end">
-            <button class="w-full bg-orange-500 text-white rounded px-4 py-2" type="submit">Save Car</button>
+            <button class="w-full bg-orange-500 text-white rounded px-4 py-2" type="submit">Save Account</button>
             </div>
             </div>
             </form>
         </div>
 
         <script>
-            function toggleForm(action, vehicle = null) {
-            const form = document.getElementById('addVehicleForm');
+            function toggleForm(action, account = null) {
+            const form = document.getElementById('addAccountForm');
             const formTitle = document.getElementById('formTitle');
             const formMethod = document.getElementById('formMethod');
-            const vehicleForm = document.getElementById('vehicleForm');
-            const carName = document.getElementById('carName');
-            const carLicense = document.getElementById('carLicense');
-            const carType = document.getElementById('carType');
-            const rentalPrice = document.getElementById('rentalPrice');
+            const accountForm = document.getElementById('accountForm');
+            const accountName = document.getElementById('accountName');
+            const accountEmail = document.getElementById('accountEmail');
+            const accountPassword = document.getElementById('accountPassword');
+            const accountRole = document.getElementById('accountRole');
+            const accountValidate = document.getElementById('accountValidate');
+            const validateSelect = document.getElementById('validateSelect');
 
             if (action === 'add') {
-            formTitle.textContent = 'Add Car';
+            formTitle.textContent = 'Add Account';
             formMethod.value = 'POST';
-            vehicleForm.action = "{{ route('add_vehicle') }}";
-            carName.value = '';
-            carLicense.value = '';
-            carType.value = '';
-            rentalPrice.value = '';
-            } else if (action === 'edit' && vehicle) {
-            formTitle.textContent = 'Edit Car';
+            accountForm.action = "{{ route('add_account') }}";
+            accountName.value = '';
+            accountEmail.value = '';
+            accountPassword.required = true;
+            accountPassword.value = '';
+            accountRole.value = '';
+            accountValidate.value = '0'; // Ensure the value is set to 0
+            validateSelect.style.display = 'none';
+            } else if (action === 'edit' && account) {
+            formTitle.textContent = 'Edit Account';
             formMethod.value = 'PUT';
-            vehicleForm.action = vehicle ? "{{ route('edit_vehicle', '') }}/" + vehicle.id : "{{ route('add_vehicle') }}";
-            carName.value = vehicle.name;
-            carLicense.value = vehicle.license_plate;
-            carType.value = vehicle.type_id;
-            rentalPrice.value = vehicle.price;
+            accountForm.action = account ? "{{ route('edit_account', '') }}/" + account.id : "{{ route('add_account') }}";
+            accountName.value = account.name;
+            accountEmail.value = account.email;
+            accountPassword.required = false;
+            accountPassword.value = '';
+            accountRole.value = account.role;
+            accountValidate.value = account.customer_validate ? '1' : '0';
+            validateSelect.style.display = account.role === 'customer' ? 'block' : 'none';
             } else if (action === 'close') {
             form.classList.add('hidden');
             return;
             }
 
             form.classList.toggle('hidden');
+            }
+
+            function toggleValidateSelect() {
+            const accountRole = document.getElementById('accountRole');
+            const validateSelect = document.getElementById('validateSelect');
+            validateSelect.style.display = accountRole.value === 'customer' ? 'block' : 'none';
             }
         </script>
         @if (session('status'))

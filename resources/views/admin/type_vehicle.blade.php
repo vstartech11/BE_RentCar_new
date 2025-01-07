@@ -12,7 +12,7 @@
             text-decoration: underline;
         }
     </style>
-    <title>Type Vehicle</title>
+    <title>Manage Type Vehicle</title>
 </head>
 <body class="bg-gray-100 font-inter">
     <div class="relative w-full h-screen">

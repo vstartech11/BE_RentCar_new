@@ -50,36 +50,64 @@
             Reservation
             </h2>
             <form action="{{ route('search') }}" method="POST">
-                @csrf
-                <div class="flex space-x-4">
-                    <div class="flex-1">
-                        <label class="block text-gray-700">Rental Duration</label>
-                        <input class="w-full border border-orange-500 rounded px-4 py-2" type="number" name="rental_duration" placeholder="Enter duration in days" min="1" max="100"/>
-                    </div>
-                    <div class="flex-1">
-                        <label class="block text-gray-700">Start Date</label>
-                        <input class="w-full border border-orange-500 rounded px-4 py-2" type="date" name="start_date"/>
-                    </div>
-                    <div class="flex-1">
-                        <label class="block text-gray-700">Start Time</label>
-                        <input class="w-full border border-orange-500 rounded px-4 py-2" type="time" name="start_time"/>
-                    </div>
-                    <div class="flex-1 flex items-end">
-                        <button class="w-full bg-orange-500 text-white rounded px-4 py-2" type="submit">Search</button>
-                    </div>
-                </div>
+            @csrf
+            <div class="flex space-x-4">
+            <div class="flex-1">
+            <label class="block text-gray-700">Rental Duration</label>
+            <input class="w-full border border-orange-500 rounded px-4 py-2" type="number" name="rental_duration" placeholder="Enter duration in days" min="1" max="10" value="1"/>
+            </div>
+            <div class="flex-1">
+            <label class="block text-gray-700">Start Date</label>
+            <input class="w-full border border-orange-500 rounded px-4 py-2" type="date" name="start_date" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}"/>
+            </div>
+            <div class="flex-1">
+            <label class="block text-gray-700">Start Time (GMT+8)</label>
+            <input class="w-full border border-orange-500 rounded px-4 py-2" type="time" name="start_time" value="{{ \Carbon\Carbon::now()->addHours(8)->format('H:i') }}"/>
+            </div>
+            <div class="flex-1 flex items-end">
+            <button class="w-full bg-orange-500 text-white rounded px-4 py-2" type="submit">Search</button>
+            </div>
+            </div>
             </form>
         </div>
+        <div class="absolute top-[calc(100%-30rem)] left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-8 w-3/4 max-w-4xl">
+            <h2 class="text-2xl font-bold text-orange-500 mb-4 border-b-4 border-[#ea580c] pb-4">
+            Your Order
+            </h2>
+            @if ($transactions->isEmpty())
+            <p class="text-gray-700">You have no transactions.</p>
+            @else
+            <table class="min-w-full bg-white">
+                <thead>
+                <tr>
+                    <th class="py-2 px-4 border-b">Date</th>
+                    <th class="py-2 px-4 border-b">Vehicle Name</th>
+                    <th class="py-2 px-4 border-b">Reservation Date</th>
+                    <th class="py-2 px-4 border-b">Payment Date</th>
+                    <th class="py-2 px-4 border-b">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach ($transactions as $transaction)
+                    <tr>
+                    <td class="py-2 px-4 border-b">{{ $transaction->date }}</td>
+                    <td class="py-2 px-4 border-b">{{ $transaction->vehicleName }}</td>
+                    <td class="py-2 px-4 border-b">{{ $transaction->reservationDate }}</td>
+                    <td class="py-2 px-4 border-b">{{ $transaction->paymentDate }}</td>
+                    <td class="py-2 px-4 border-b">{{ $transaction->status }}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+            @endif
+        </div>
+
         @if (session('status'))
             <div class="absolute top-80 left-1/2 transform -translate-x-1/2 bg-green-500 text-white rounded px-4 py-2">
                 {{ session('status') }}
             </div>
         @endif
-        <div class="absolute top-[calc(100%-30rem)] left-1/2 transform -translate-x-1/2 text-center w-3/4 max-w-4xl">
-            <p class="mt-4 text-xl">
-                Enjoy the freedom to book your car anytime, anywhere, with ease and no hassle. Your perfect ride is just a click away
-            </p>
-        </div>
+
     </div>
 </body>
 </html>

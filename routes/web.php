@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VehicleController;
 use App\Models\TypeVehicle;
 use App\Models\Vehicle;
+use App\Models\User;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,10 +26,7 @@ Route::get('register', [AuthController::class, 'showRegisterForm'])->middleware(
 Route::post('register', [AuthController::class, 'register']);
 //search
 Route::post('search', [VehicleController::class, 'searchVehicle'])->middleware('auth')->name('search');
-//get search
-Route::get('search', function () {
-    return view('search');
-})->middleware('auth')->name('search');
+
 //edit vehicle is show admin.vehicle
 Route::get('admin/vehicle', function () {
     $vehicles = Vehicle::all();
@@ -40,6 +38,11 @@ Route::get('admin/type_vehicle', function () {
     $typeVehicles = TypeVehicle::all();
     return view('admin.type_vehicle', compact('typeVehicles'));
 })->middleware('auth')->name('admin.type_vehicle');
+//edit account is show admin.account
+Route::get('admin/account', function () {
+    $accounts = User::all();
+    return view('admin.account', compact('accounts'));
+})->middleware('auth')->name('admin.account');
 
 
 //when / is accessed, it will redirect to /login
@@ -58,6 +61,13 @@ Route::post('admin/add_type_vehicle', [VehicleController::class, 'addTypeVehicle
 Route::put('admin/edit_type_vehicle/{id}', [VehicleController::class, 'editTypeVehicle'])->middleware('auth')->name('edit_type_vehicle');
 //delete type vehicle delete
 Route::delete('admin/delete_type_vehicle/{id}', [VehicleController::class, 'deleteTypeVehicle'])->middleware('auth')->name('delete_type_vehicle');
+//add account
+Route::post('admin/add_account', [AuthController::class, 'addAccount'])->middleware('auth')->name('add_account');
+//edit account put
+Route::put('admin/edit_account/{id}', [AuthController::class, 'editAccount'])->middleware('auth')->name('edit_account');
+//delete account delete
+Route::delete('admin/delete_account/{id}', [AuthController::class, 'deleteAccount'])->middleware('auth')->name('delete_account');
+
 
 //admin dashboard
 Route::get('admin/dashboard', function () {
@@ -67,5 +77,21 @@ Route::get('admin/dashboard', function () {
 })->middleware('auth')->name('admin.dashboard');
 
 Route::get('dashboard', function () {
-    return view('dashboard');
+    $transactions = DB::table('reservations')
+        ->join('vehicles', 'reservations.vehicle_id', '=', 'vehicles.id')
+        ->leftJoin('payments', 'reservations.id', '=', 'payments.reservation_id')
+        ->select(
+            'reservations.created_at as date',
+            'vehicles.name as vehicleName',
+            'reservations.reservation_date as reservationDate',
+            'payments.payment_date as paymentDate',
+            'reservations.status as status'
+        )
+        ->get();
+    return view('dashboard', compact('transactions'));
 })->middleware('auth')->name('dashboard');
+
+
+
+//payment customer post
+Route::post('payment', [VehicleController::class, 'payment'])->middleware('auth')->name('payment');
