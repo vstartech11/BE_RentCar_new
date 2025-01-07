@@ -39,98 +39,94 @@
             </div>
         </div>
 
-        <div class="absolute top-20 left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-8 w-11/12 max-w-6xl mt-20 overflow-y-auto" style="max-height: 80vh;">
-            <div class="flex justify-end">
-            <button class="bg-orange-500 text-white px-4 py-2 rounded" onclick="toggleForm('add')">Add New Payment</button>
-            </div>
+        <div class="absolute top-20 left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-8 w-full max-w-8xl mt-20 overflow-y-auto" style="max-height: 80vh;">
             <h2 class="text-2xl font-bold text-orange-500 mb-4 border-b-4 border-[#ea580c] pb-4">
             List Payments
             </h2>
 
             <div class="overflow-x-auto">
             @if($payments->isEmpty())
-                <p class="text-center text-gray-500">No payments available.</p>
+            <p class="text-center text-gray-500">No payments available.</p>
             @else
-                <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden mx-auto">
-                <thead class="bg-orange-500 text-white">
-                    <tr>
-                    <th class="py-4 px-6 text-left">Payment ID</th>
-                    <th class="py-4 px-6 text-left">Payment Date</th>
-                    <th class="py-4 px-6 text-left">Amount</th>
-                    <th class="py-4 px-6 text-left">Payment Method</th>
-                    <th class="py-4 px-6 text-left">Pickup Date</th>
-                    <th class="py-4 px-6 text-left">Return Date</th>
-                    <th class="py-4 px-6 text-left">Vehicle Name</th>
-                    <th class="py-4 px-6 text-left">Admin Name</th>
-                    <th class="py-4 px-6 text-left">Customer Name</th>
-                    <th class="py-4 px-6 text-left">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($payments as $payment)
-                    <tr class="border-b hover:bg-gray-100">
-                        <td class="py-4 px-6">{{ $payment->id }}</td>
-                        <td class="py-4 px-6">{{ $payment->paymentDate }}</td>
-                        <td class="py-4 px-6">{{ $payment->amount }}</td>
-                        <td class="py-4 px-6">{{ $payment->paymentMethod }}</td>
-                        <td class="py-4 px-6">{{ $payment->pickupDate }}</td>
-                        <td class="py-4 px-6">{{ $payment->returnDate }}</td>
-                        <td class="py-4 px-6">{{ $payment->vehicleName }}</td>
-                        <td class="py-4 px-6">{{ $payment->adminName }}</td>
-                        <td class="py-4 px-6">{{ $payment->customerName }}</td>
-                        <td class="py-4 px-6">
-                        <a href="javascript:void(0)" onclick="toggleForm('edit', @json($payment))" class="text-blue-500 hover:underline">Edit</a>
-                        <form action="{{ route('delete_payment', $payment->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this payment?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-500 hover:underline ml-2">Delete</button>
-                        </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-                </table>
+            <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden mx-auto">
+            <thead class="bg-orange-500 text-white">
+                <tr>
+                <th class="py-4 px-6 text-left">Payment ID</th>
+                <th class="py-4 px-6 text-left">Payment Date</th>
+                <th class="py-4 px-6 text-left">Amount</th>
+                <th class="py-4 px-6 text-left">Payment Method</th>
+                <th class="py-4 px-6 text-left">Pickup Date</th>
+                <th class="py-4 px-6 text-left">Return Date</th>
+                <th class="py-4 px-6 text-left">Vehicle Name</th>
+                <th class="py-4 px-6 text-left">Admin Name</th>
+                <th class="py-4 px-6 text-left">Customer Name</th>
+                <th class="py-4 px-6 text-left">Reservation Status</th>
+                <th class="py-4 px-6 text-left">Payment Status</th>
+                <th class="py-4 px-6 text-left">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($payments as $payment)
+                <tr class="border-b hover:bg-gray-100">
+                <td class="py-4 px-6">{{ $payment->id }}</td>
+                <td class="py-4 px-6">{{ $payment->paymentDate }}</td>
+                <td class="py-4 px-6">{{ $payment->amount }}</td>
+                <td class="py-4 px-6">{{ $payment->paymentMethod }}</td>
+                <td class="py-4 px-6">{{ $payment->pickupDate }}</td>
+                <td class="py-4 px-6">{{ $payment->returnDate }}</td>
+                <td class="py-4 px-6">{{ $payment->vehicleName }}</td>
+                <td class="py-4 px-6">{{ $payment->adminName }}</td>
+                <td class="py-4 px-6">{{ $payment->customerName }}</td>
+                <td class="py-4 px-6">{{ $payment->reservationStatus }}</td>
+                <td class="py-4 px-6">{{ $payment->paymentStatus }}</td>
+                <td class="py-4 px-6">
+                <a href="javascript:void(0)" onclick="toggleForm('edit', {{ json_encode($payment) }})" class="text-blue-500 hover:underline">Edit</a>
+                </td>
+                </tr>
+                @endforeach
+            </tbody>
+            </table>
             @endif
             </div>
         </div>
 
         <div id="addPaymentForm" class="absolute top-64 left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-8 w-3/4 max-w-4xl hidden">
             <div class="flex justify-between items-center mb-4">
-                <h2 id="formTitle" class="text-2xl font-bold text-orange-500 border-b-4 border-[#ea580c] pb-4">
-                    Add Payment
-                </h2>
-                <button onclick="toggleForm('close')" class="text-gray-500 hover:text-gray-700">
-                    <i class="fas fa-times"></i>
-                </button>
+            <h2 id="formTitle" class="text-2xl font-bold text-orange-500 border-b-4 border-[#ea580c] pb-4">
+            Edit Payment
+            </h2>
+            <button onclick="toggleForm('close')" class="text-gray-500 hover:text-gray-700">
+            <i class="fas fa-times"></i>
+            </button>
             </div>
-            <form id="paymentForm" action="{{ route('add_payment') }}" method="POST">
+            <form id="paymentForm" action="{{ route('edit_payment', '') }}" method="POST">
                 @csrf
-                <input type="hidden" id="formMethod" name="_method" value="POST">
+                @method('PUT')
+                <input type="hidden" id="paymentId" name="payment_id" value="{{ $payment->id }}">
+                <input type="hidden" id="reservationId" name="reservation_id" value="{{ $payment->reservationId }}">
+                <input type="hidden" id="vehicleId" name="vehicle_id" value="{{ $payment->vehicleId }}">
                 <div class="flex space-x-4">
                     <div class="flex-1">
-                        <label class="block text-gray-700">User</label>
-                        <select id="paymentUser" class="w-full border border-orange-500 rounded px-4 py-2" name="user_id" required>
-                            <option value="" disabled selected>Select user</option>
-                            @foreach($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="flex-1">
-                        <label class="block text-gray-700">Amount</label>
-                        <input id="paymentAmount" class="w-full border border-orange-500 rounded px-4 py-2" type="number" name="amount" placeholder="Enter amount" required/>
-                    </div>
-                    <div class="flex-1">
-                        <label class="block text-gray-700">Status</label>
-                        <select id="paymentStatus" class="w-full border border-orange-500 rounded px-4 py-2" name="status" required>
-                            <option value="" disabled selected>Select status</option>
+                        <label class="block text-gray-700">Payment Status</label>
+                        <select id="paymentStatus" class="w-full border border-orange-500 rounded px-4 py-2" name="payment_status" required>
+                            <option value="" disabled selected>Select payment status</option>
                             <option value="pending">Pending</option>
-                            <option value="completed">Completed</option>
+                            <option value="paid">Paid</option>
                             <option value="failed">Failed</option>
                         </select>
                     </div>
                 </div>
                 <div class="flex space-x-4 mt-4">
+                    <div class="flex-1">
+                        <label class="block text-gray-700">Reservation Status</label>
+                        <select id="reservationStatus" class="w-full border border-orange-500 rounded px-4 py-2" name="reservation_status" required>
+                            <option value="" disabled selected>Select reservation status</option>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
                     <div class="flex-1 flex items-end">
                         <button class="w-full bg-orange-500 text-white rounded px-4 py-2" type="submit">Save Payment</button>
                     </div>
@@ -140,34 +136,23 @@
 
         <script>
             function toggleForm(action, payment = null) {
-                const form = document.getElementById('addPaymentForm');
-                const formTitle = document.getElementById('formTitle');
-                const formMethod = document.getElementById('formMethod');
-                const paymentForm = document.getElementById('paymentForm');
-                const paymentUser = document.getElementById('paymentUser');
-                const paymentAmount = document.getElementById('paymentAmount');
-                const paymentStatus = document.getElementById('paymentStatus');
+            const form = document.getElementById('addPaymentForm');
+            const formTitle = document.getElementById('formTitle');
+            const paymentForm = document.getElementById('paymentForm');
+            const paymentStatus = document.getElementById('paymentStatus');
+            const reservationStatus = document.getElementById('reservationStatus');
 
-                if (action === 'add') {
-                    formTitle.textContent = 'Add Payment';
-                    formMethod.value = 'POST';
-                    paymentForm.action = "{{ route('add_payment') }}";
-                    paymentUser.value = '';
-                    paymentAmount.value = '';
-                    paymentStatus.value = '';
-                } else if (action === 'edit' && payment) {
-                    formTitle.textContent = 'Edit Payment';
-                    formMethod.value = 'PUT';
-                    paymentForm.action = "{{ route('edit_payment', '') }}/" + payment.id;
-                    paymentUser.value = payment.user_id;
-                    paymentAmount.value = payment.amount;
-                    paymentStatus.value = payment.status;
-                } else if (action === 'close') {
-                    form.classList.add('hidden');
-                    return;
-                }
+            if (action === 'edit' && payment) {
+            formTitle.textContent = 'Edit Payment';
+            paymentForm.action = "{{ route('edit_payment', '') }}/" + payment.id;
+            paymentStatus.value = payment.payment_status;
+            reservationStatus.value = payment.reservation_status;
+            } else if (action === 'close') {
+            form.classList.add('hidden');
+            return;
+            }
 
-                form.classList.toggle('hidden');
+            form.classList.toggle('hidden');
             }
         </script>
         @if (session('status'))

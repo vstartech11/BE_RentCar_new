@@ -53,6 +53,7 @@ Route::get('admin/account', function () {
 })->middleware('auth')->name('admin.account');
 //edit payment is show admin.payment
 Route::get('admin/payment', function () {
+    $users = User::all();
     $payments = DB::table('payments')
         ->join('reservations', 'payments.reservation_id', '=', 'reservations.id')
         ->join('vehicles', 'reservations.vehicle_id', '=', 'vehicles.id')
@@ -63,15 +64,20 @@ Route::get('admin/payment', function () {
             'payments.payment_date as paymentDate',
             'payments.amount as amount',
             'payments.payment_method as paymentMethod',
+            'reservations.id as reservationId',
             'reservations.pickup_date as pickupDate',
             'reservations.return_date as returnDate',
             'vehicles.name as vehicleName',
+            'vehicles.id as vehicleId',
             'admins.name as adminName',
-            'customers.name as customerName'
+            'customers.name as customerName',
+            'reservations.status as reservationStatus',
+            'payments.status as paymentStatus'
         )
         ->orderBy('paymentDate', 'asc')
         ->get();
-    return view('admin.payment', compact('payments'));
+    return view('admin.payment', compact('payments', 'users'));
+
 })->middleware('auth')->name('admin.payment');
 
 
@@ -109,6 +115,7 @@ Route::get('admin/dashboard', function () {
 })->middleware('auth')->name('admin.dashboard');
 
 Route::get('dashboard', function () {
+
     $transactions = DB::table('reservations')
         ->join('vehicles', 'reservations.vehicle_id', '=', 'vehicles.id')
         ->leftJoin('payments', 'reservations.id', '=', 'payments.reservation_id')

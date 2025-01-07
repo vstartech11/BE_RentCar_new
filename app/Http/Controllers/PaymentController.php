@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\Reservation;
 use App\Models\Payment;
 use App\Models\User;
+use App\Models\Vehicle;
+use Illuminate\Support\Facades\Validator;
+
+
 class PaymentController extends Controller
 {
 
@@ -52,4 +56,40 @@ class PaymentController extends Controller
         ]);
 
     }
+
+    //edit payment 'payment_status'=>'required','reservation_status'=>'required'
+    public function editPayment(Request $request)
+    {
+        //validate request payment_status, reservation_status
+        $validator = Validator::make($request->all(), [
+            'reservation_id' => 'required',
+            'payment_id' => 'required',
+            'payment_status' => 'required',
+            'reservation_status' => 'required',
+            'vehicle_id' => 'required',
+        ]);
+
+
+        if ($validator->fails()) {
+            return redirect()->back()->with('status', $validator->errors());
+        }
+
+        //update payment table
+        $payment = Payment::where('id', $request->payment_id)->update([
+            'status' => $request->payment_status,
+        ]);
+
+        //update reservations table
+        $reservation = Reservation::where('id', $request->reservation_id)->update([
+            'status' => $request->reservation_status,
+        ]);
+
+        //update vehicle table
+        $vehicle = Vehicle::where('id', $request->vehicle_id)->update([
+            'status' => 'rented',
+        ]);
+    }
+
+
+
 }
