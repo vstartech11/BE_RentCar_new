@@ -16,10 +16,10 @@
 </head>
 <body class="bg-gray-100 font-inter">
     <div class="relative w-full h-screen">
-        <img alt="Background image of a car on a scenic road" class="absolute top-0 left-0 w-full h-full object-cover" height="671" src="{{ asset('img/newbackround.png') }}" width="1280"/>
+        <img alt="Background image of a car on a scenic road" class="absolute top-0 left-0 w-full h-full object-cover" height="671" src="{{ asset('storage/img/newbackround.png') }}" width="1280"/>
         <div class="absolute top-0 left-0 w-full h-8 bg-gray-300"></div>
         <div class="absolute top-8 left-0 w-full h-12 bg-white shadow-md flex items-center justify-between px-4">
-            <img alt="Company logo" class="h-10" height="41" src="{{ asset('img/new logo.png') }}" width="138"/>
+            <img alt="Company logo" class="h-10" height="41" src="{{ asset('storage/img/new logo.png') }}" width="138"/>
             <div class="flex space-x-4 items-center">
                 <div class="relative group">
                     <button class="bg-orange-500 text-white px-4 py-2 rounded">Welcome {{ Auth::user()->name }}</button>

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('type_id')->constrained('type_vehicles'); // Foreign key ke type_vehicles
+            $table->foreignId('type_id')->constrained('type_vehicles','id'); // Foreign key ke type_vehicles
             $table->string('name');
             $table->decimal('price', 10, 2);
             $table->string('license_plate')->unique();

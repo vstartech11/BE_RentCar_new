@@ -22,7 +22,7 @@
     <header class="bg-white shadow-md">
      <div class="p-4 flex justify-between items-center shadow-lg">
         <div class="flex items-center">
-         <img alt="Logo" class="mr-2 w-40" src="{{ asset('img/new logo.png') }}"/>
+         <img alt="Logo" class="mr-2 w-40" src="{{ asset('storage/img/new logo.png') }}"/>
         </div>
         <div class="flex space-x-4 items-center">
             <div class="relative group">
@@ -45,7 +45,7 @@
      <div class="shadow-md mt-4 rounded-lg">
         <div class="bg-white p-4 flex justify-between items-center rounded-lg" style="border-radius: 15px;">
          <div class="flex items-center flex-col">
-            <img alt="Logo" class="mr-2 w-40" src="{{ asset('img/logo new.png') }}"/>
+            <img alt="Logo" class="mr-2 w-40" src="{{ asset('storage/img/logo new.png') }}"/>
             <div>
              <p>
                 18 Nov 2024 - 1 Day

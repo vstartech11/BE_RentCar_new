@@ -18,7 +18,7 @@
     <div class="bg-gray-300 h-12 w-full"></div>
     <div class="flex min-h-screen">
         <div class="w-1/2 relative">
-        <img alt="Cover Image" class="w-full h-full object-cover" src="{{ asset('img/coverlogin.png') }}"/>
+        <img alt="Cover Image" class="w-full h-full object-cover" src="{{ asset('storage/img/coverlogin.png') }}"/>
             <div class="absolute inset-0 flex items-center justify-center">
                 <div class="text-white text-6xl custom-font text-center">
                     <p>anytime</p>

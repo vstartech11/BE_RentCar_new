@@ -18,7 +18,7 @@
     <div class="bg-gray-300 h-12"></div>
     <div class="flex flex-col lg:flex-row min-h-screen">
         <div class="lg:w-1/2 relative">
-            <img alt="A car parked on the side of a road with a scenic mountain view" class="w-full h-full object-cover" height="600" src="{{ asset('img/coverlogin.png') }}" width="800"/>
+            <img alt="A car parked on the side of a road with a scenic mountain view" class="w-full h-full object-cover" height="600" src="{{ asset('storage/img/coverlogin.png') }}" width="800"/>
             <div class="absolute inset-0 flex items-center justify-center">
                 <div class="text-white text-center custom-font text-4xl md:text-5xl lg:text-6xl">
                     <p>anytime</p>
@@ -59,7 +59,7 @@
                     <button class="w-full bg-orange-500 text-white py-2 rounded" type="submit">Continue</button>
                 </form>
                 <div class="mt-4 text-center">
-                    <p>Already have an account? <a class="text-orange-500" href="#">Sign In now</a></p>
+                    <p>Already have an account? <a class="text-orange-500" href="{{ route('login') }}">Sign In now</a></p>
                     <p class="text-sm text-gray-500 mt-2">
                         By creating an account, you agree to the
                         <a class="text-orange-500" href="#">Terms and Conditions</a> and
